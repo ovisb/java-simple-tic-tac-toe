@@ -33,6 +33,10 @@ Added the following game states:
   - inputs were already set in the grid
 - Update Grid with user input, for now updating only 'X'
 
+18.10.2023
+- Added main game loop, where user can input either X or O
+- Game ends if there is a winner or it's a draw.
+
 ## Project status
 
-Completed 4/5 stages
+Completed 5/5 stages
