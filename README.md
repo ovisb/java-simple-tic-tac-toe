@@ -26,6 +26,13 @@ Added the following game states:
 - `O wins` when the grid has three O’s in a row (including diagonals).
 - `Impossible` when the grid has three X’s in a row as well as three O’s in a row, or there are a lot more X's than O's or vice versa (the difference should be 1 or 0; if the difference is 2 or more, then the game state is impossible).
 
+17.10.2023
+- Added validations where user will be re prompted if any of the bellow happen
+  - inputs are not valid numbers
+  - inputs are out of array bounds
+  - inputs were already set in the grid
+- Update Grid with user input, for now updating only 'X'
+
 ## Project status
 
-Completed 3/5 stages
+Completed 4/5 stages

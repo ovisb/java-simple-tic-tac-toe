@@ -1,5 +1,6 @@
 package tictactoe;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Main {
@@ -26,11 +27,10 @@ public class Main {
     /**
      * Print Grid
      * @param grid 2D 3x3 char array
-     * @param input string of chars of X's and/or 0's and/or empty lines
      */
-    public static void printGrid(char[][] grid, String input) {
+    public static void printGrid(char[][] grid) {
 
-        System.out.println("-".repeat(input.length()));
+        System.out.println("-".repeat(grid.length * maxSize));
         for (char[] row : grid) {
             System.out.print("| ");
             for (char letter: row) {
@@ -39,7 +39,7 @@ public class Main {
             System.out.print("|");
             System.out.println();
         }
-        System.out.println("-".repeat(input.length()));
+        System.out.println("-".repeat(grid.length * maxSize));
     }
 
     /**
@@ -86,6 +86,12 @@ public class Main {
         return false;
     }
 
+    /**
+     * Check if there's a winner on any of the Grids diagonals
+     * @param grid 2D 3x3 char array
+     * @param player X or O
+     * @return true or false
+     */
     public static boolean isDiagonalWinner(char[][] grid, char player) {
         int count = 0;
         for (int i = 0; i < grid.length; i++) {
@@ -107,25 +113,32 @@ public class Main {
         return count == 3;
     }
 
+    /**
+     * Check whether there are more X's then O's and vice versa.
+     * If diff is >= 2 game state will be impossible
+     * @param input string of chars of X's and/or 0's and/or empty lines
+     * @return difference result as int
+     */
     public static int countPlayerDiff(String input) {
-        int countX = 0;
-        int countO = 0;
+        int countPlayerX = 0;
+        int countPlayerO = 0;
 
         for (int i = 0; i < input.length(); i++) {
             char letter = input.charAt(i);
             if (letter == 'X') {
-                countX += 1;
+                countPlayerX += 1;
             } else if (letter == 'O') {
-                countO += 1;
+                countPlayerO += 1;
             }
         }
-
-        if (countX > countO) {
-            return countX - countO;
-        }
-        return countO - countX;
+        return countPlayerX > countPlayerO ? countPlayerX - countPlayerO : countPlayerO - countPlayerX;
     }
 
+    /**
+     * Check if Grid has any empty spaces
+     * @param grid 2D 3x3 char array
+     * @return true if empty space >= 1
+     */
     public static boolean hasEmptySpaces(char[][] grid) {
         for (int i = 0; i < grid.length; i++) {
             // check row for empty
@@ -144,23 +157,66 @@ public class Main {
         return false;
     }
 
+
+//    public static void findWinner(String playerX, string playerO) {
+//        if ((isLineWinner(grid, 'X') && isLineWinner(grid, 'O')) || (isColumnWinner(grid, 'X') && isColumnWinner(grid, 'O')) || countPlayerDiff(input) >= 2) {
+//            System.out.println("Impossible");
+//        } else if ((isLineWinner(grid, 'X') || isColumnWinner(grid, 'X')) || isDiagonalWinner(grid, 'X')) {
+//            System.out.println("X wins");
+//        } else if ((isLineWinner(grid, 'O') || isColumnWinner(grid, 'O')) || isDiagonalWinner(grid, 'O')) {
+//            System.out.println("O wins");
+//        } else if(!(isLineWinner(grid, 'X') || isColumnWinner(grid, 'O')) && hasEmptySpaces(grid)) {
+//            System.out.println("Game not finished");
+//        } else if(!(isLineWinner(grid, 'X') || isColumnWinner(grid, 'O')) && !hasEmptySpaces(grid)) {
+//            System.out.println("Draw");
+//        }
+//    }
+
     public static void main(String[] args) {
         // write your code here
+        int row, col;
         Scanner scanner = new Scanner(System.in);
         String input = scanner.next();
+//        String input = "X_X_O____";
         char[][] grid = create_grid(input);
 
-        printGrid(grid, input);
-        if ((isLineWinner(grid, 'X') && isLineWinner(grid, 'O')) || (isColumnWinner(grid, 'X') && isColumnWinner(grid, 'O')) || countPlayerDiff(input) >= 2) {
-            System.out.println("Impossible");
-        } else if ((isLineWinner(grid, 'X') || isColumnWinner(grid, 'X')) || isDiagonalWinner(grid, 'X')) {
-            System.out.println("X wins");
-        } else if ((isLineWinner(grid, 'O') || isColumnWinner(grid, 'O')) || isDiagonalWinner(grid, 'O')) {
-            System.out.println("O wins");
-        } else if(!(isLineWinner(grid, 'X') || isColumnWinner(grid, 'O')) && hasEmptySpaces(grid)) {
-            System.out.println("Game not finished");
-        } else if(!(isLineWinner(grid, 'X') || isColumnWinner(grid, 'O')) && !hasEmptySpaces(grid)) {
-            System.out.println("Draw");
+        printGrid(grid);
+
+        while (true) {
+            try {
+                row = scanner.nextInt();
+                col = scanner.nextInt();
+            } catch (InputMismatchException e) {
+                System.out.println("You should enter numbers!");
+                scanner.nextLine();
+                continue;
+            }
+
+            if (row < 1 || col < 1 || row > 3 || col > 3) {
+                System.out.println("Coordinates should be from 1 to 3!");
+                continue;
+            }
+
+            if (grid[row-1][col-1] != '_') {
+                System.out.println("This cell is occupied! Choose another one!");
+                continue;
+            }
+            grid[row-1][col-1] = 'X';
+            scanner.close();
+            break;
         }
+        printGrid(grid);
+
+//        if ((isLineWinner(grid, 'X') && isLineWinner(grid, 'O')) || (isColumnWinner(grid, 'X') && isColumnWinner(grid, 'O')) || countPlayerDiff(input) >= 2) {
+//            System.out.println("Impossible");
+//        } else if ((isLineWinner(grid, 'X') || isColumnWinner(grid, 'X')) || isDiagonalWinner(grid, 'X')) {
+//            System.out.println("X wins");
+//        } else if ((isLineWinner(grid, 'O') || isColumnWinner(grid, 'O')) || isDiagonalWinner(grid, 'O')) {
+//            System.out.println("O wins");
+//        } else if(!(isLineWinner(grid, 'X') || isColumnWinner(grid, 'O')) && hasEmptySpaces(grid)) {
+//            System.out.println("Game not finished");
+//        } else if(!(isLineWinner(grid, 'X') || isColumnWinner(grid, 'O')) && !hasEmptySpaces(grid)) {
+//            System.out.println("Draw");
+//        }
     }
 }
